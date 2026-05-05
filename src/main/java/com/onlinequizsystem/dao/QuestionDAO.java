@@ -28,13 +28,15 @@ public class QuestionDAO {
         List<Question> questions = new ArrayList<>();
         String sql = "SELECT * FROM questions WHERE quiz_id = ?";
         Connection conn = DBConnection.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                List<String> options = Arrays.asList(rs.getString("options").split(","));
-                questions.add(new Question(rs.getInt("id"), rs.getInt("quiz_id"),
-                                          rs.getString("question_text"), options,
-                                          rs.getString("correct_answer")));
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, quizId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    List<String> options = Arrays.asList(rs.getString("options").split(","));
+                    questions.add(new Question(rs.getInt("id"), rs.getInt("quiz_id"),
+                                              rs.getString("question_text"), options,
+                                              rs.getString("correct_answer")));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

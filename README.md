@@ -14,10 +14,47 @@ A Java-based application for conducting online quizzes with secure login, quiz m
 
 - **Backend**: Java
 - **Frontend**: Java Swing
-- **Database**: MySQL
+- **Database**: H2 Database
 - **Connectivity**: JDBC
 
 ## Prerequisites
+
+- Java 11 or higher
+- Maven (for building)
+
+## Setup and Running
+
+1. **Clone or download the project**
+
+2. **Build the project** (optional, as classes are pre-compiled):
+   ```
+   mvn clean compile
+   ```
+
+3. **Run the application**:
+   - **GUI Mode** (default): `java -cp <classpath> com.onlinequizsystem.Main`
+   - **Command-Line Testing**:
+     - Test login: `java -cp <classpath> com.onlinequizsystem.Main test-login`
+     - Test registration: `java -cp <classpath> com.onlinequizsystem.Main test-register`
+     - List quizzes: `java -cp <classpath> com.onlinequizsystem.Main list-quizzes`
+     - Test quiz taking: `java -cp <classpath> com.onlinequizsystem.Main test-quiz`
+
+   Replace `<classpath>` with the appropriate classpath including H2 JAR and compiled classes.
+
+## Default Credentials
+
+- **Admin**: Username: `admin`, Password: `admin123`
+
+## Database
+
+The application uses H2 embedded database. The database file is created automatically in the project directory (`./online_quiz_system.mv.db`). Sample data is inserted on first run.
+
+## Usage
+
+1. Run the application in GUI mode.
+2. Login as admin or register a new user.
+3. Admins can create quizzes and manage users.
+4. Users can take available quizzes and view results.
 
 - Java 11 or higher
 - MySQL Server

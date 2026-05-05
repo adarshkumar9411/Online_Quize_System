@@ -32,6 +32,7 @@ public class QuizTakingView extends JFrame {
         questions = quiz.getQuestions();
         answers = new HashMap<>();
         currentQuestionIndex = 0;
+        System.out.println("Debug: QuizTakingView created for quiz: " + quiz.getTitle() + ", questions: " + (questions != null ? questions.size() : "null"));
         initializeUI();
         showQuestion();
     }
@@ -73,11 +74,14 @@ public class QuizTakingView extends JFrame {
     }
 
     private void showQuestion() {
-        if (currentQuestionIndex < questions.size()) {
+        System.out.println("Debug: showQuestion called, currentQuestionIndex: " + currentQuestionIndex + ", questions size: " + (questions != null ? questions.size() : "null"));
+        if (questions != null && currentQuestionIndex < questions.size()) {
             Question q = questions.get(currentQuestionIndex);
+            System.out.println("Debug: Showing question: " + q.getQuestionText());
             questionLabel.setText((currentQuestionIndex + 1) + ". " + q.getQuestionText());
             List<String> options = q.getOptions();
-            for (int i = 0; i < options.size(); i++) {
+            System.out.println("Debug: Options: " + options);
+            for (int i = 0; i < options.size() && i < optionButtons.length; i++) {
                 optionButtons[i].setText(options.get(i));
                 optionButtons[i].setSelected(false);
             }
@@ -85,6 +89,8 @@ public class QuizTakingView extends JFrame {
                 nextButton.setEnabled(false);
                 submitButton.setEnabled(true);
             }
+        } else {
+            System.out.println("Debug: No more questions or questions is null");
         }
     }
 

@@ -9,6 +9,7 @@ import java.util.List;
 public class UserDAO {
 
     public boolean registerUser(User user) {
+        System.out.println("Debug: DAO registerUser called for: " + user.getUsername());
         String sql = "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)";
         Connection conn = DBConnection.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -16,8 +17,11 @@ public class UserDAO {
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getEmail());
             stmt.setString(4, user.getRole());
-            return stmt.executeUpdate() > 0;
+            int rows = stmt.executeUpdate();
+            System.out.println("Debug: Inserted " + rows + " rows for user: " + user.getUsername());
+            return rows > 0;
         } catch (SQLException e) {
+            System.out.println("Debug: SQLException in registerUser: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -26,11 +30,13 @@ public class UserDAO {
     public User getUserByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = ?";
         Connection conn = DBConnection.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                return new User(rs.getInt("id"), rs.getString("username"),
-                                rs.getString("password"), rs.getString("email"), rs.getString("role"));
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(rs.getInt("id"), rs.getString("username"),
+                                    rs.getString("password"), rs.getString("email"), rs.getString("role"));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -39,6 +45,7 @@ public class UserDAO {
     }
 
     public User loginUser(String username, String password) {
+        System.out.println("Debug: DAO loginUser called for: " + username);
         String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
         Connection conn = DBConnection.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -46,11 +53,16 @@ public class UserDAO {
             stmt.setString(2, password);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return new User(rs.getInt("id"), rs.getString("username"),
+                    User user = new User(rs.getInt("id"), rs.getString("username"),
                                     rs.getString("password"), rs.getString("email"), rs.getString("role"));
+                    System.out.println("Debug: Found user: " + user.getUsername() + ", role: " + user.getRole());
+                    return user;
+                } else {
+                    System.out.println("Debug: No user found for: " + username);
                 }
             }
         } catch (SQLException e) {
+            System.out.println("Debug: SQLException in loginUser: " + e.getMessage());
             e.printStackTrace();
         }
         return null;

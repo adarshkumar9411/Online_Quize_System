@@ -67,13 +67,16 @@ public class UserDashboardView extends JFrame {
     private void loadData() {
         // Load quizzes
         List<Quiz> quizzes = quizController.getAllQuizzes();
+        System.out.println("Debug: Loaded " + quizzes.size() + " quizzes");
         quizModel.clear();
         for (Quiz q : quizzes) {
             quizModel.addElement(q);
+            System.out.println("Debug: Quiz: " + q.getTitle());
         }
 
         // Load user results
         List<Result> results = quizController.getUserResults(user.getId());
+        System.out.println("Debug: Loaded " + results.size() + " results for user " + user.getId());
         resultModel.clear();
         for (Result r : results) {
             resultModel.addElement(r);
@@ -82,8 +85,13 @@ public class UserDashboardView extends JFrame {
 
     private void takeSelectedQuiz() {
         Quiz selected = quizList.getSelectedValue();
+        System.out.println("Debug: takeSelectedQuiz called, selected quiz: " + (selected != null ? selected.getTitle() : "null"));
         if (selected != null) {
-            new QuizTakingView(user, selected).setVisible(true);
+            Quiz fullQuiz = quizController.getQuizById(selected.getId());
+            System.out.println("Debug: Full quiz loaded with " + (fullQuiz.getQuestions() != null ? fullQuiz.getQuestions().size() : 0) + " questions");
+            new QuizTakingView(user, fullQuiz).setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a quiz to take.");
         }
     }
 

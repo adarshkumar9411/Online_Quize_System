@@ -46,12 +46,19 @@ public class QuizController {
     public int evaluateQuiz(int userId, int quizId, Map<Integer, String> answers) {
         List<Question> questions = questionDAO.getQuestionsByQuiz(quizId);
         int score = 0;
+        System.out.println("Debug: Evaluating quiz " + quizId + " for user " + userId);
         for (Question q : questions) {
             String userAnswer = answers.get(q.getId());
+            System.out.println("Debug: Question " + q.getId() + ": " + q.getQuestionText());
+            System.out.println("Debug: User answer: " + userAnswer + ", Correct answer: " + q.getCorrectAnswer());
             if (userAnswer != null && userAnswer.equals(q.getCorrectAnswer())) {
                 score++;
+                System.out.println("Debug: Correct!");
+            } else {
+                System.out.println("Debug: Incorrect!");
             }
         }
+        System.out.println("Debug: Total score: " + score + "/" + questions.size());
         // Save result
         Result result = new Result(0, userId, quizId, score, questions.size(), new Timestamp(System.currentTimeMillis()));
         resultDAO.saveResult(result);

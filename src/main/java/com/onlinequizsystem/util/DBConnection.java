@@ -80,6 +80,24 @@ public class DBConnection {
             stmt.execute("INSERT INTO users (username, password, email, role) " +
                 "SELECT 'admin', 'admin123', 'admin@example.com', 'admin' " +
                 "WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin')");
+
+            // Insert sample quiz if not exists
+            stmt.execute("INSERT INTO quizzes (title, description, created_by) " +
+                "SELECT 'Sample Quiz', 'A sample quiz to test the system', 1 " +
+                "WHERE NOT EXISTS (SELECT 1 FROM quizzes WHERE title = 'Sample Quiz')");
+
+            // Insert sample questions if not exists
+            stmt.execute("INSERT INTO questions (quiz_id, question_text, options, correct_answer) " +
+                "SELECT 1, 'What is 2 + 2?', '3,4,5,6', '4' " +
+                "WHERE NOT EXISTS (SELECT 1 FROM questions WHERE question_text = 'What is 2 + 2?')");
+
+            stmt.execute("INSERT INTO questions (quiz_id, question_text, options, correct_answer) " +
+                "SELECT 1, 'What is the capital of France?', 'London,Paris,Berlin,Madrid', 'Paris' " +
+                "WHERE NOT EXISTS (SELECT 1 FROM questions WHERE question_text = 'What is the capital of France?')");
+
+            stmt.execute("INSERT INTO questions (quiz_id, question_text, options, correct_answer) " +
+                "SELECT 1, 'Which planet is known as the Red Planet?', 'Venus,Earth,Mars,Jupiter', 'Mars' " +
+                "WHERE NOT EXISTS (SELECT 1 FROM questions WHERE question_text = 'Which planet is known as the Red Planet?')");
         }
     }
 

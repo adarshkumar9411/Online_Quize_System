@@ -48,11 +48,13 @@ public class QuizDAO {
     public Quiz getQuizById(int id) {
         String sql = "SELECT * FROM quizzes WHERE id = ?";
         Connection conn = DBConnection.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                return new Quiz(rs.getInt("id"), rs.getString("title"),
-                                rs.getString("description"), rs.getInt("created_by"));
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Quiz(rs.getInt("id"), rs.getString("title"),
+                                    rs.getString("description"), rs.getInt("created_by"));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
